@@ -1,0 +1,12 @@
+{
+  "name": "Stats System.Editor",
+  "rootNamespace": "Stats System.Editor",
+  "references": ["Stats System.Runtime"],
+  "includePlatforms": ["Editor"],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
+}

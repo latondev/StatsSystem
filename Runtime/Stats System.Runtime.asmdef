@@ -1,0 +1,12 @@
+{
+  "name": "Stats System.Runtime",
+  "rootNamespace": "Stats System",
+  "references": [],
+  "includePlatforms": [],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
+}

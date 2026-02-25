@@ -1,0 +1,11 @@
+{
+  "name": "com.latondev.stats-system",
+  "version": "1.0.0",
+  "displayName": "Stats System",
+  "description": "Description for Stats System.",
+  "unity": "6000.0",
+  "author": {
+    "name": "latondev"
+  },
+  "dependencies": {}
+}
