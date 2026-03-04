@@ -1,7 +1,7 @@
 {
   "name": "Stats System.Editor",
   "rootNamespace": "Stats System.Editor",
-  "references": ["Stats System.Runtime"],
+  "references": ["Stats System.Runtime","Design"],
   "includePlatforms": ["Editor"],
   "excludePlatforms": [],
   "allowUnsafeCode": false,
