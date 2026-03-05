@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "displayName": "Stats System",
   "description": "Description for Stats System.",
-  "unity": "6000.0",
+  "unity": "6000.0.60f1",
   "author": {
     "name": "latondev"
   },
