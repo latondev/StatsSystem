@@ -1,6 +1,5 @@
 using UnityEngine;
 using System.Collections.Generic;
-using DesignPatterns.Iterator;
 using System.Timers;
 using System;
 using Timer = System.Timers.Timer;
@@ -13,7 +12,7 @@ namespace GameSystems.Stats
 		[SerializeField] private int level = 1;
 		[SerializeField] private bool debugMode = true;
 
-		[SerializeField] private UnitStatIteratorData statData = new UnitStatIteratorData();
+		[SerializeField] private UnitStatsCollection statsCollection = new UnitStatsCollection();
 
 		[Header("Runtime Info")]
 		[SerializeField] private int currentIndex = -1;
@@ -36,8 +35,8 @@ namespace GameSystems.Stats
 		}
 
 		public int Level => level;
-		public UnitStatIteratorData StatData => statData;
-		public Stat CurrentStat => statData.CurrentIterator?.Current;
+		public UnitStatsCollection Stats => statsCollection;
+		public Stat CurrentStat => statsCollection.CurrentStat;
 
 		public event System.Action<Stat> OnStatChanged;
 		public event System.Action<Stat> OnStatDepleted;
@@ -46,12 +45,12 @@ namespace GameSystems.Stats
 
 		void Start()
 		{
-			if (statData.Collection.Count == 0)
+			if (statsCollection.Stats.Count == 0)
 			{
 				SetupDefaultStats();
 			}
 
-			statData.Initialize();
+			statsCollection.Initialize();
 
 			SetupRegenTimer();
 
@@ -68,7 +67,7 @@ namespace GameSystems.Stats
 
 		public float GetStatValue(string statId)
 		{
-			Stat stat = statData.GetStatById(statId);
+			Stat stat = statsCollection.GetStatById(statId);
 			return stat?.GetValueWithPending() ?? 0f;
 		}
 
@@ -88,13 +87,13 @@ namespace GameSystems.Stats
 
 		private void SetupDefaultStats()
 		{
-			statData.AddItem(new Stat("hp", "Health", StatType.Health, 100f, 100f, true, 1f));
-			statData.AddItem(new Stat("mp", "Mana", StatType.Mana, 50f, 50f, true, 2f));
-			statData.AddItem(new Stat("stamina", "Stamina", StatType.Stamina, 100f, 100f, true, 5f));
+			statsCollection.AddItem(new Stat("hp", "Health", StatType.Health, 100f, 100f, true, 1f));
+			statsCollection.AddItem(new Stat("mp", "Mana", StatType.Mana, 50f, 50f, true, 2f));
+			statsCollection.AddItem(new Stat("stamina", "Stamina", StatType.Stamina, 100f, 100f, true, 5f));
 
-			statData.AddItem(new Stat("attack", "Attack", StatType.Attack, 20f));
-			statData.AddItem(new Stat("defense", "Defense", StatType.Defense, 10f));
-			statData.AddItem(new Stat("speed", "Speed", StatType.Speed, 15f));
+			statsCollection.AddItem(new Stat("attack", "Attack", StatType.Attack, 20f));
+			statsCollection.AddItem(new Stat("defense", "Defense", StatType.Defense, 10f));
+			statsCollection.AddItem(new Stat("speed", "Speed", StatType.Speed, 15f));
 		}
 
 		private void SetupRegenTimer()
@@ -107,7 +106,7 @@ namespace GameSystems.Stats
 
 		private void OnRegenTimerElapsed(object sender, ElapsedEventArgs e)
 		{
-			foreach (var stat in statData.Collection)
+			foreach (var stat in statsCollection.Stats)
 			{
 				if (stat.CanRegenerate && stat.CurrentValue < stat.MaxValue)
 				{
@@ -133,28 +132,28 @@ namespace GameSystems.Stats
 
 		public void Next()
 		{
-			Stat stat = statData.Next();
+			Stat stat = statsCollection.Next();
 			UpdateRuntimeInfo();
 			LogDebug($"→ {stat}");
 		}
 
 		public void Previous()
 		{
-			Stat stat = statData.Previous();
+			Stat stat = statsCollection.Previous();
 			UpdateRuntimeInfo();
 			LogDebug($"← {stat}");
 		}
 
 		public void First()
 		{
-			Stat stat = statData.First();
+			Stat stat = statsCollection.First();
 			UpdateRuntimeInfo();
 			LogDebug($"⏮ {stat}");
 		}
 
 		public void Last()
 		{
-			Stat stat = statData.Last();
+			Stat stat = statsCollection.Last();
 			UpdateRuntimeInfo();
 			LogDebug($"⏭ {stat}");
 		}
@@ -202,7 +201,7 @@ namespace GameSystems.Stats
 
 		public void RestoreAll()
 		{
-			foreach (var stat in statData.Collection)
+			foreach (var stat in statsCollection.Stats)
 			{
 				stat.RestoreToMax();
 			}
@@ -215,7 +214,7 @@ namespace GameSystems.Stats
 
 		public void AddModifier(string statId, IModifier<float> modifier)
 		{
-			Stat stat = statData.GetStatById(statId);
+			Stat stat = statsCollection.GetStatById(statId);
 			if (stat != null)
 			{
 				stat.Modifiers.Add(modifier);
@@ -225,7 +224,7 @@ namespace GameSystems.Stats
 
 		public void AddMaxModifier(string statId, IModifier<float> modifier)
 		{
-			Stat stat = statData.GetStatById(statId);
+			Stat stat = statsCollection.GetStatById(statId);
 			if (stat != null)
 			{
 				stat.MaxModifiers.Add(modifier);
@@ -235,7 +234,7 @@ namespace GameSystems.Stats
 
 		public void ClearAllModifiers()
 		{
-			foreach (var stat in statData.Collection)
+			foreach (var stat in statsCollection.Stats)
 			{
 				stat.Modifiers.Clear();
 				stat.MaxModifiers.Clear();
@@ -251,7 +250,7 @@ namespace GameSystems.Stats
 		{
 			level++;
 
-			foreach (var stat in statData.Collection)
+			foreach (var stat in statsCollection.Stats)
 			{
 				float baseIncrease = GetStatIncreaseForLevel(stat.StatType);
 				float maxIncrease = GetMaxIncreaseForLevel(stat.StatType);
@@ -297,14 +296,14 @@ namespace GameSystems.Stats
 
 		public void SortByType()
 		{
-			statData.SortByType();
+			statsCollection.SortByType();
 			UpdateRuntimeInfo();
 			LogDebug("Sorted by Type");
 		}
 
 		public void SortByValue()
 		{
-			statData.SortByValue();
+			statsCollection.SortByValue();
 			UpdateRuntimeInfo();
 			LogDebug("Sorted by Value");
 		}
@@ -351,8 +350,8 @@ namespace GameSystems.Stats
 
 		private void UpdateRuntimeInfo()
 		{
-			currentIndex = statData.GetCurrentIndex();
-			totalIterations = statData.GetTotalIterations();
+			currentIndex = statsCollection.GetCurrentIndex();
+			totalIterations = statsCollection.GetTotalIterations();
 		}
 
 		public void ShowStatsInfo()
@@ -361,7 +360,7 @@ namespace GameSystems.Stats
 			Debug.Log($"<color=yellow>📊 {unitName} Stats (Level {level}) 📊</color>");
 			Debug.Log("<color=cyan>═══════════════════════════════════════</color>");
 
-			foreach (var stat in statData.Collection)
+			foreach (var stat in statsCollection.Stats)
 			{
 				Debug.Log($"  {stat}");
 			}

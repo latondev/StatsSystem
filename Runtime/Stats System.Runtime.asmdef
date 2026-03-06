@@ -1,9 +1,7 @@
 {
     "name": "Stats System.Runtime",
     "rootNamespace": "Stats System",
-    "references": [
-        "GUID:5063a180ce522f84ebd7bef28e0e4013"
-    ],
+    "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

@@ -106,12 +106,12 @@ public class StatMasterExample : MonoBehaviour
 	{
 		Debug.Log("\n🎮 INTEGRATION WITH UNIT STATS");
 
-		var attack = unitStats.StatData.GetStatById("attack");
+		var attack = unitStats.Stats.GetStatById("attack");
 		attack.Modifiers.Add(Modifier.Plus(10f,0, "Weapon Bonus"));
 		attack.Modifiers.Add(Modifier.Times(1.2f, 0,"Berserk"));
 
-		var hp = unitStats.StatData.GetStatById("hp");
-		var maxHP = unitStats.StatData.GetStatById("mp");
+		var hp = unitStats.Stats.GetStatById("hp");
+		var maxHP = unitStats.Stats.GetStatById("mp");
 		maxHP.Modifiers.Add(Modifier.Plus(50f, 0,"Vitality Boost"));
 
 		Debug.Log($"HP: {hp.CurrentValue}/{hp.MaxValue}");

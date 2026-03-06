@@ -155,9 +155,9 @@ public class UnitStatControllerEditor : Editor
         EditorGUILayout.BeginVertical(statStyle);
         GUI.backgroundColor = previousBg;
 
-        var hp = controller.StatData.GetStatById("hp");
-        var mp = controller.StatData.GetStatById("mp");
-        var stamina = controller.StatData.GetStatById("stamina");
+        var hp = controller.Stats.GetStatById("hp");
+        var mp = controller.Stats.GetStatById("mp");
+        var stamina = controller.Stats.GetStatById("stamina");
 
         if (hp != null)
         {
@@ -353,7 +353,7 @@ public class UnitStatControllerEditor : Editor
 
         if (!showVitals) return;
 
-        var vitalStats = controller.StatData.GetVitalStats();
+        var vitalStats = controller.Stats.GetVitalStats();
         foreach (var stat in vitalStats)
         {
             DrawStatWithBar(stat, false);
@@ -368,7 +368,7 @@ public class UnitStatControllerEditor : Editor
 
         if (!showCombat) return;
 
-        var combatStats = controller.StatData.GetCombatStats();
+        var combatStats = controller.Stats.GetCombatStats();
         foreach (var stat in combatStats)
         {
             DrawStatInfo(stat, false);
@@ -379,18 +379,18 @@ public class UnitStatControllerEditor : Editor
     {
         EditorGUILayout.BeginHorizontal();
         showStats = EditorGUILayout.Foldout(showStats,
-            $"All Stats ({controller.StatData.Collection.Count})", true, headerStyle);
+            $"All Stats ({controller.Stats.Count})", true, headerStyle);
         EditorGUILayout.EndHorizontal();
 
         if (!showStats) return;
 
-        int currentIndex = controller.StatData.GetCurrentIndex();
+        int currentIndex = controller.Stats.GetCurrentIndex();
 
         statsScrollPos = EditorGUILayout.BeginScrollView(statsScrollPos, GUILayout.MaxHeight(250));
 
-        for (int i = 0; i < controller.StatData.Collection.Count; i++)
+        for (int i = 0; i < controller.Stats.Count; i++)
         {
-            var stat = controller.StatData.Collection[i];
+            var stat = controller.Stats.Stats[i];
             bool isCurrent = i == currentIndex;
 
             if (stat.MaxValue > 0) DrawStatWithBar(stat, isCurrent);
